@@ -3,4 +3,4 @@
 docker run --rm \
     --network=host \
     -v $PWD:/work \
-    -t torstees/whistler buildsrcqr "$@"
+    torstees/whistler buildsrcqr "$@"
