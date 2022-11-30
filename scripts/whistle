@@ -3,4 +3,4 @@
 docker run --rm \
     --network=host \
     -v $PWD:/work \
-    torstees/whistler /whistle "$@"
+    torstees/whistler whistle "$@"
