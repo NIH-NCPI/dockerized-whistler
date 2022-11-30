@@ -22,20 +22,25 @@ WORKDIR /dist
 # Copy the libraries needed to make whistle run
 RUN ldd /dist/whistle | tr -s '[:blank:]' '\n' | grep '^/' | \
     xargs -I % sh -c 'mkdir -p $(dirname ./%); cp % ./%;' && \
-    mkdir -p lib64 && cp /lib64/ld-linux-x86-64.so.2 lib64/
+    mkdir -p lib64 && cp /lib64/ld-linux-x86-64.so.2 lib64/ 
 
 FROM python:3.7-alpine
-COPY --from=builder /dist /
+RUN mkdir -p /lib64 /lib
+COPY --from=builder /lib64 /lib64
+COPY --from=builder /lib /lib
+COPY --from=builder /dist /usr/local/bin
 COPY --from=builder /work /work
 
 RUN apk update && apk add git libffi-dev
 RUN apk add build-base
+#RUN apk add --no-cache bash
 RUN which gcc
 
 RUN pip3 install --upgrade pip
-RUN pip3 install PyYAML
-RUN pip3 install git+https://git@github.com/ncpi-fhir/ncpi-fhir-utility.git
-RUN pip3 install git+https://github.com/ncpi-fhir/ncpi-fhir-client
+RUN pip3 install PyYAML \
+        importlib_resources \
+        git+https://git@github.com/ncpi-fhir/ncpi-fhir-utility.git \
+        git+https://github.com/ncpi-fhir/ncpi-fhir-client
 RUN pip3 install git+https://github.com/NIH-NCPI/ncpi-whistler
 
 # /work is the working directory. Users should map the root directory of 
