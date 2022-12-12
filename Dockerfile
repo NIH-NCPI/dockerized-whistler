@@ -31,13 +31,17 @@ COPY --from=builder /lib /lib
 COPY --from=builder /dist /usr/local/bin
 COPY --from=builder /work /work
 
-RUN apk update && apk add git libffi-dev
+RUN apk update && \
+        apk add bash \
+                git \
+                libffi-dev
 RUN apk add build-base
 #RUN apk add --no-cache bash
 RUN which gcc
 
 RUN pip3 install --upgrade pip
 RUN pip3 install PyYAML \
+        jinja2 \
         importlib_resources \
         git+https://git@github.com/ncpi-fhir/ncpi-fhir-utility.git \
         git+https://github.com/ncpi-fhir/ncpi-fhir-client

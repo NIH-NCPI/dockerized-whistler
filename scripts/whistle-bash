@@ -1,0 +1,7 @@
+#!/bin/bash
+
+docker run --rm \
+    --network=host \
+    -v $PWD:/work \
+    -it \
+    torstees/whistler bash 
